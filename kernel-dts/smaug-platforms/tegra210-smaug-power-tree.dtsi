@@ -15,8 +15,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tegra210-abcb-pmic-01-00.dtsi"
-#include "tegra210-abcb-power-fixed-01-00.dtsi"
+#include "tegra210-smaug-pmic.dtsi"
+#include "tegra210-smaug-power-fixed.dtsi"
 #include <t210-common-platforms/tegra210-ers-power-dvfs-e2174-1101-a00.dtsi>
 
 / {
@@ -103,8 +103,15 @@
 		};
 	};
 
+	i2c@7000c400 {
+	/*	bh1730fvc@29 {
+			vid-supply = <&max77620_ldo6>;
+			vdd-supply = <&pp3300>;
+		};*/
+	};
+
 	i2c@546c0000 {
-		bus-pullup-supply = <&battery_reg>;
+		bus-pullup-supply = <&max77620_ldo0>;
 	};
 
 	efuse@7000f800 {
@@ -114,33 +121,45 @@
 	host1x {
 		/* tegradc.0 */
 		dc@54200000 {
-			avdd_hdmi-supply = <&max77620_ldo8>;    /* 1V05 */
-			avdd_hdmi_pll-supply = <&max77620_sd3>; /* 1V8 */
-			vdd_hdmi_5v0-supply = <&vdd_hdmi>;
-			/* dp */
-			vdd-dp-pwr-supply = <&vdd_3v3>;
-			avdd-dp-pll-supply = <&max77620_sd3>;
-			vdd-dp-pad-supply = <&max77620_ldo8>;
+			avdd_dsi_csi-supply = <&max77620_ldo0>;
+		//	pavdd_lcd-supply = <&v_pavdd_5v0>;
+		//	navdd_lcd-supply = <&v_navdd_5v0>;
+		//	dvdd_lcd-supply = <&max77620_sd3>;
+		//	vdd_lcd_bl_en-supply = <&lcd_bl_en>;
+			power-supply = <&pplcd_vdd>;
+			ddi-supply = <&pp1800_lcdio>;
 		};
 
 		/* tegradc.1 */
 		dc@54240000 {
-			avdd_dsi_csi-supply = <&max77620_gpio7>;
-			pavdd_lcd-supply = <&v_pavdd_5v0>;
-			navdd_lcd-supply = <&v_navdd_5v0>;
-			dvdd_lcd-supply = <&max77620_sd3>;
-			vdd_lcd_bl_en-supply = <&lcd_bl_en>;
+			avdd_hdmi-supply = <&max77620_ldo8>;    /* 1V05 */
+			avdd_hdmi_pll-supply = <&max77620_sd3>; /* 1V8 */
+		//	vdd_hdmi_5v0-supply = <&vdd_hdmi>;	/* 5V0 GPIO_PCC7 fixed reg */
+			/* dp */
+			vdd-dp-pwr-supply = <&pp3300>;
+			avdd-dp-pll-supply = <&max77620_sd3>;
+			vdd-dp-pad-supply = <&max77620_ldo8>;
+		};
+
+		dsi {
+			avdd-dsi-csi-supply = <&max77620_ldo0>;
+			power-supply = <&pplcd_vdd>;
+			ddi-supply = <&pp1800_lcdio>;
 		};
 
 		vi {
-			avdd_dsi_csi-supply = <&max77620_gpio7>;
+			avdd_dsi_csi-supply = <&max77620_ldo0>;
+		};
+
+		i2c@546c0000 {
+			avdd_dsi_csi-supply = <&max77620_ldo0>;
 		};
 	};
 
 	sound_card: sound {
-		spkvdd-supply = <&battery_reg>;
-		dbvdd-supply = <&max77620_sd3>;
-		avdd-supply = <&max77620_sd3>;
+	//	spkvdd-supply = <&battery_reg>;
+	//	dbvdd-supply = <&max77620_sd3>;
+	//	avdd-supply = <&max77620_sd3>;
 	};
 
 	pmc-iopower {
@@ -149,7 +168,7 @@
 		vddio-audio-supply = <&max77620_sd3>;
 		vddio-cam-supply = <&max77620_sd3>;
 		vddio-pex-ctrl-supply = <&max77620_sd3>;
-		vddio-sdmmc1-supply = <&max77620_ldo2>;
+		vddio-sdmmc1-supply = <&max77620_sd3>;
 		vddio-sdmmc3-supply = <&max77620_sd3>;
 		vddio-sdmmc4-supply = <&max77620_sd3>;
 		vddio-audio-hv-supply = <&max77620_sd3>;
@@ -163,77 +182,72 @@
 		vddio-dp-supply = <&max77620_sd3>;
 	};
 
+/*	usb_cd {
+		usb_bat_chg-supply = <&battery_charger>;
+	};*/
+
 	xusb@70090000 {
-		usb_vbus0-supply = <&battery_reg>;
-		usb_vbus1-supply = <&battery_reg>;
-		usb_vbus2-supply = <&battery_reg>;
-		usb_vbus3-supply = <&battery_reg>;
-		hvdd_usb-supply = <&vdd_3v3>;
+		hvdd_usb-supply = <&pp3300>;
 		avdd_pll_utmip-supply = <&max77620_sd3>;
 		vddio_hsic-supply = <&max77620_ldo0>;
-		avddio_usb-supply = <&max77620_ldo1>;
+		avddio_usb-supply = <&max77620_ldo8>;
 		dvdd_sata-supply = <&max77620_ldo8>;
 		avddio_pll_uerefe-supply = <&max77620_ldo7>;
 	};
 
 	xudc@700d0000 {
-		hvdd_usb-supply = <&vdd_3v3>;
+		hvdd_usb-supply = <&pp3300>;
 		avdd_pll_utmip-supply = <&max77620_sd3>;
-		avddio_usb-supply = <&max77620_ldo1>;
+		avddio_usb-supply = <&max77620_ldo8>;
 		avddio_pll_uerefe-supply = <&max77620_ldo7>;
-        };
-
-	xotg {
-		usb_vbus-supply = <&battery_reg>;
 	};
 
-	pinctrl@7009f000 {
-		vbus-0-supply = <&battery_reg>;
-		vbus-1-supply = <&battery_reg>;
-		vbus-2-supply = <&battery_reg>;
-		vbus-3-supply = <&battery_reg>;
+	xotg {
+		usb_vbus-supply = <&usbc_vbus>;
+	};
+
+	xusb_padctl@7009f000 {
 		vddio-hsic-supply = <&max77620_ldo0>;
 		avdd_pll_uerefe-supply = <&max77620_ldo7>;
 		hvdd_pex_pll_e-supply = <&max77620_sd3>;
-		dvdd_pex_pll-supply = <&max77620_ldo1>;
+		dvdd_pex_pll-supply = <&max77620_ldo8>;
 		hvddio_pex-supply = <&max77620_sd3>;
-		dvddio_pex-supply = <&max77620_ldo1>;
+		dvddio_pex-supply = <&max77620_ldo8>;
 		hvdd_sata-supply = <&max77620_sd3>;
 		dvdd_sata_pll-supply = <&max77620_ldo8>;
 		hvddio_sata-supply = <&max77620_sd3>;
 		dvddio_sata-supply = <&max77620_ldo8>;
+
+
+		ports {
+			usb2-0 {
+				vbus-supply = <&usbc_vbus>;
+			};
+		};
 	};
 
 	sdhci@700b0600 {
 		vqmmc-supply = <&max77620_sd3>;
-		vmmc-supply = <&vdd_3v3>;
+		vmmc-supply = <&pp3300>;
 	};
 
 	sdhci@700b0400 {
 		vqmmc-supply = <&max77620_sd3>;
-		vmmc-supply = <&vdd_3v3>;
+		vmmc-supply = <&pp3300>;
 	};
 
 	sdhci@700b0200 {
 		vqmmc-supply = <&max77620_sd3>;
-		vmmc-supply = <&vdd_3v3>;
+		vmmc-supply = <&pp3300>;
 	};
 
 	sdhci@700b0000 {
-		vqmmc-supply = <&max77620_ldo2>;
-		vmmc-supply = <&en_vdd_sd>;
-	};
-
-	sata@70020000 {
-		hvdd_sata-supply = <&max77620_sd3>;
-		hvdd_pex_pll_e-supply = <&max77620_sd3>;
-		l0_hvddio_sata-supply = <&max77620_sd3>;
-		l0_dvddio_sata-supply = <&max77620_ldo8>;
-		dvdd_sata_pll-supply = <&max77620_ldo8>;
+	//	vqmmc-supply = <&max77620_ldo2>;
+	//	vmmc-supply = <&en_vdd_sd>;
 	};
 
 	bluedroid_pm {
-		avdd-supply = <&battery_reg>;
-		dvdd-supply = <&max77620_sd3>;
+	//	avdd-supply = <&battery_reg>;
+	//	dvdd-supply = <&max77620_sd3>;
 	};
 };

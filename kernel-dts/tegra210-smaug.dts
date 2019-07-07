@@ -1,0 +1,247 @@
+/*
+ * arch/arm64/boot/dts/tegra210-smaug.dts
+ *
+ * Copyright (c) 2014-2016, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ */
+
+#include "tegra210-smaug-common.dtsi"
+#include "tegra210-smaug-common-disp.dtsi"
+#include "smaug-platforms/tegra210-smaug-power-tree.dtsi"
+#include "smaug-platforms/tegra210-smaug-emc.dtsi"
+//#include "smaug-platforms/tegra210-smaug-sensor.dtsi"
+#include "smaug-platforms/tegra210-smaug-pinmux.dtsi"
+#include "smaug-platforms/tegra210-smaug-keys.dtsi"
+#include "smaug-platforms/tegra210-smaug-thermal-nct72.dtsi"
+#include "smaug-platforms/tegra210-darcy-extcon-p2894-0000-a00.dtsi"
+
+/ {
+
+	model = "Google Pixel C";
+	compatible = "google,smaug-rev8", "google,smaug-rev7",
+		     "google,smaug-rev6", "google,smaug-rev5",
+		     "google,smaug-rev4", "google,smaug-rev3",
+		     "google,smaug-rev2", "google,smaug-rev1",
+		     "google,smaug", "nvidia,tegra210";
+
+	nvidia,dtsfilename = __FILE__;
+	nvidia,boardids = "2595:0000:A0";
+	nvidia,proc-boardid = "2595:0000:A0";
+	nvidia,pmu-boardid = "2595:0000:A0";
+
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	serial-number = "1234";
+
+	chosen {
+		bootargs = "cros_legacy init=/init rw console=ttyS0,115200n8 console=fb0 printk.synchronous=1 pstore.compress=lz4 vpr_resize fbcon=map:0 video=tegrafb no_console_suspend=1";
+		nvidia,bluetooth-mac = "11:22:33:44:55:66";
+	};
+
+	firmware {
+		android {
+			compatible = "android,firmware";
+			hardware = "smaug";
+		};
+	};
+
+/*	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		/delete-node/ ramoops_carveout;
+
+		ramoops@f66cc000 {
+			compatible = "ramoops";
+			reg = <0 0xf66cc000 0 0x400000>;
+			record-size = <0x00090000>;
+			console-size = <0x00090000>;
+			pmsg-size = <0x00090000>;
+		};
+	};
+
+	reserved-memory {
+		#address-cells = <0x2>;
+		#size-cells = <0x2>;
+		ranges;
+
+		ramoops_carveout {
+			compatible = "nvidia,ramoops";
+			reg = <0x0 0xf66cc000 0x0 0x200000>;
+			no-map;
+		};
+	};*/
+
+	gpu {
+		status = "okay";
+	};
+
+	tlk {
+		status = "okay";
+	/*	clocks = <&tegra_car TEGRA210_CLK_NVDEC>;
+		clock-names = "nvdec";
+		resets = <&tegra_car TEGRA210_CLK_NVDEC>;
+		reset-names = "nvdec";
+		power-domains = <&nvdec_pd>;*/
+	};
+
+	cpu_edp {
+		status = "okay";
+		nvidia,edp_limit = <16000>;
+	};
+
+	gpu_edp {
+		status = "okay";
+		nvidia,edp_limit = <16000>;
+	};
+
+	cpus {
+		idle-states {
+			entry-method = "psci";
+
+			c7 {
+				arm,psci-suspend-param = <0x00010007>;
+			};
+
+			/delete-node/ cc6;
+		};
+	};
+
+	spi@7000d400 {
+		status = "okay";
+/*		spi@0 {
+			compatible = "spidev";
+			reg = <0>;
+			spi-max-frequency = <13000000>;
+		};*/
+	};
+	spi@7000da00 {
+		status = "okay";
+/*		spi@0 {
+			compatible = "spidev";
+			reg = <0>;
+			spi-max-frequency = <13000000>;
+		};*/
+	};
+
+	i2c1: i2c@7000c000 {
+		status = "okay";
+		clock-frequency = <1000000>;
+
+		touchscreen: i2c-hid-dev@20 {
+				compatible = "hid-over-i2c";
+				reg = <0x20>;
+				status = "okay";
+				hid-descr-addr = <0x0020>;
+				interrupt-parent = <&gpio>;
+				interrupts = <TEGRA_GPIO(X, 1) IRQ_TYPE_EDGE_FALLING>;
+		};
+	};
+
+	i2c2: i2c@7000c400 {
+		status = "okay";
+		clock-frequency = <1000000>;
+
+		ec@1e {
+			compatible = "google,cros-ec-i2c";
+			reg = <0x1e>;
+			interrupt-parent = <&gpio>;
+			interrupts = <TEGRA_GPIO(Z, 1) IRQ_TYPE_LEVEL_LOW>;
+			wakeup-source;
+
+			ec_i2c_0: i2c-tunnel {
+				compatible = "google,cros-ec-i2c-tunnel";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				google,remote-bus = <0>;
+
+				battery: bq27742@55 {
+					compatible = "ti,bq27742";
+					reg = <0x55>;
+					battery-name = "battery";
+				};
+			};
+
+			usbc_extcon: extcon {
+				compatible = "google,extcon-usbc-cros-ec";
+				google,usb-port-id = <0>;
+			};
+		};
+	};
+
+	i2c3: i2c@7000c500 {
+		status = "okay";
+		clock-frequency = <400000>;
+		tpm@20 {
+			compatible = "infineon,slb9645tt";
+			reg = <0x20>;
+			powered-while-suspended;
+			status = "okay";
+		};
+	};
+
+	i2c6: i2c@7000d100 {
+		status = "okay";
+		clock-frequency = <400000>;
+
+		backlight: lp8557-backlight@2c {
+				status = "okay";
+				compatible = "ti,lp8557";
+				reg = <0x2c>;
+				power-supply = <&pplcd_vdd>;
+				enable-supply = <&pp1800_lcdio>;
+				bl-name = "lp8557-backlight";
+				dev-ctrl = /bits/ 8 <0x01>;
+				init-brt = /bits/ 8 <0xFF>;
+				/* Full scale current, 20mA */
+				rom_11h {
+						rom-addr = /bits/ 8 <0x11>;
+						rom-val = /bits/ 8 <0x05>;
+				};
+				/* Frequency = 4.9kHz, magic undocumented val */
+				rom_12h {
+						rom-addr = /bits/ 8 <0x12>;
+						rom-val = /bits/ 8 <0x29>;
+				};
+				/* Boost freq = 1MHz, BComp option = 1 */
+				rom_13h {
+						rom-addr = /bits/ 8 <0x13>;
+						rom-val = /bits/ 8 <0x03>;
+				};
+				/* 4V OV, 6 output LED string enabled */
+				rom_14h {
+						rom-addr = /bits/ 8 <0x14>;
+						rom-val = /bits/ 8 <0xbf>;
+				};
+		};
+	};
+
+	sound {
+		status = "disabled";
+	};
+
+	sound_ref {
+		status = "disabled";
+	};
+
+	pwm@7000a000 {
+		status = "disabled";
+	};
+
+//	/delete-node/ psy_extcon_xudc;
+//	/delete-node/ usb_cd@7009f000;
+//	/delete-node/ ramoops_carveout;
+
+};

@@ -1,5 +1,5 @@
 /*
- * arch/arm64/boot/dts/tegra210-abca-common-disp.dtsi
+ * arch/arm64/boot/dts/tegra210-smaug-common-disp.dtsi
  *
  * Copyright (c) 2016-2017, NVIDIA CORPORATION.  All rights reserved.
  *
@@ -14,31 +14,11 @@
  *
  */
 
-#include <panels/panel-a-wuxga-8-0.dtsi>
-#include <panels/panel-o-720p-6-0.dtsi>
-#include <panels/panel-o-720p-6-0-01.dtsi>
+#include "smaug-platforms/panel-s-wqxga-10-2.dtsi"
 
 / {
-	backlight {
-		compatible = "pwm-backlight";
-		status = "okay";
-		power-supply = <&max77620_sd3>;
-		panel-a-wuxga-8-0-bl {
-			pwms = <&tegra_pwm 0 40161>;
-		};
-		panel-o-720p-6-0-bl {
-			pwms = <&tegra_pwm 0 40000>;
-			max-brightness = <168>;
-			default-brightness = <168>;
-		};
-		panel-o-720p-6-0-01-bl {
-			status = "okay";
-			pwms = <&tegra_pwm 0 35000>;
-			default-brightness = <168>;
-		};
-	};
-
 	host1x {
+		status = "okay";
 		/* tegradc.0 */
 		dc@54200000 {
 			status = "okay";
@@ -52,7 +32,7 @@
 
 		/* tegradc.1 */
 		dc@54240000 {
-			status = "okay";
+			status = "disabled";
 			nvidia,dc-flags = <TEGRA_DC_FLAG_ENABLED>;
 			nvidia,emc-clk-rate = <300000000>;
 			nvidia,fb-bpp = <32>; /* bits per pixel */
@@ -64,48 +44,37 @@
 		dsi {
 			nvidia,dsi-controller-vs = <DSI_VS_1>;
 			status = "okay";
-			nvidia,active-panel = <&panel_o_720p_6_0_01>;
-			panel-a-wuxga-8-0 {
-				nvidia,dsi-dpd-pads = <DSIC_DPD_EN DSID_DPD_EN>;
-				nvidia,panel-rst-gpio = <&gpio TEGRA_GPIO(V, 2) 0>; /* PV2 */
-				nvidia,panel-bl-pwm-gpio = <&gpio TEGRA_GPIO(V, 0) 0>; /* PV0 */
-			};
-			panel-o-720p-6-0 {
-				nvidia,dsi-dpd-pads = <DSIC_DPD_EN DSID_DPD_EN>;
-				nvidia,panel-bl-pwm-gpio = <&gpio TEGRA_GPIO(V, 0) 0>; /* PV0 */
-				nvidia,panel-rst-gpio = <&gpio TEGRA_GPIO(V, 2) 0>; /* PV2 */
-				disp-default-out {
-					nvidia,out-rotation = <270>;
-				};
-			};
-			panel-o-720p-6-0-01 {
+			nvidia,active-panel = <&panel_s_wqxga_10_2>;
+			panel-s-wqxga-10-2 {
 				status = "okay";
 				nvidia,dsi-dpd-pads = <DSIC_DPD_EN DSID_DPD_EN>;
-				nvidia,panel-bl-pwm-gpio = <&gpio TEGRA_GPIO(V, 0) 0>; /* PV0 */
+				nvidia,panel-en-gpio = <&gpio TEGRA_GPIO(V, 1) 1>; /* PV0 */
 				nvidia,panel-rst-gpio = <&gpio TEGRA_GPIO(V, 2) 0>; /* PV2 */
+				power-supply = <&pplcd_vdd>;
+				ddi-supply = <&pp1800_lcdio>;
 				disp-default-out {
-					nvidia,out-rotation = <270>;
+					nvidia,out-rotation = <0>;
 				};
 			};
 		};
 
 		sor {
-			status = "disabled";
+			status = "disabled"; //0x54540000 disabled-in-stok / disabled-in-abca / disabled-in-5.2
 		};
 
 		dpaux {
-			status = "okay";
+			status = "okay"; //0x545c0000 disabled-in-stok / okey-in-abca / okey-in-5.2
 		};
 
 		vi {
-			status = "disabled";
+			status = "okay";
 		};
 
 		sor1 {
-			status = "okay";
+			status = "disabled"; //0x54580000 okey-in-stok / okey-in-abca / disabled-in-5.2
 			nvidia,active-panel = <&sor1_dp_display>;
 			dp-display {
-				status = "okay";
+				status = "okey";
 				compatible = "dp, display";
 				nvidia,hpd-gpio = <&gpio TEGRA_GPIO(CC, 1) 1>; /* PN7 */
 				nvidia,is_ext_dp_panel = <1>;
@@ -152,11 +121,11 @@
 		};
 
 		dpaux1 {
-			status = "okay";
+			status = "disabled"; // 0x54040000 okey-in-stok / okey-in-abca / disabled-in-5.2
 		};
 
 		i2c@546c0000 {
-			status = "disabled";
+			status = "okay";
 		};
 	};
 };
