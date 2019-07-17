@@ -15,6 +15,7 @@
  */
 
 #include "smaug-platforms/panel-s-wqxga-10-2.dtsi"
+//#include <t210-common-platforms/tegra210-ers-hdmi-e2190-1100-a00.dtsi>
 
 / {
 	host1x {
@@ -25,9 +26,16 @@
 			nvidia,dc-flags = <TEGRA_DC_FLAG_ENABLED>;
 			nvidia,emc-clk-rate = <300000000>;
 			nvidia,fb-bpp = <32>; /* bits per pixel */
+			nvidia,fbmem-size = <265420800>;
 			nvidia,fb-flags = <TEGRA_FB_FLIP_ON_PROBE>;
 			nvidia,dc-or-node = "/host1x/dsi";
 			nvidia,dc-connector = <&dsi>;
+			pinctrl-names = "pad_ab_default", "pad_ab_idle",
+				"pad_cd_default", "pad_cd_idle";
+			pinctrl-0 = <&dsi_ab_pad_default>;
+			pinctrl-1 = <&dsi_ab_pad_idle>;
+			pinctrl-2 = <&dsi_cd_pad_default>;
+			pinctrl-3 = <&dsi_cd_pad_idle>;
 		};
 
 		/* tegradc.1 */
@@ -48,7 +56,7 @@
 			panel-s-wqxga-10-2 {
 				status = "okay";
 				nvidia,dsi-dpd-pads = <DSIC_DPD_EN DSID_DPD_EN>;
-				nvidia,panel-en-gpio = <&gpio TEGRA_GPIO(V, 1) 1>; /* PV0 */
+				nvidia,panel-en-gpio = <&gpio TEGRA_GPIO(V, 1) 0>; /* PV1 */
 				nvidia,panel-rst-gpio = <&gpio TEGRA_GPIO(V, 2) 0>; /* PV2 */
 				power-supply = <&pplcd_vdd>;
 				ddi-supply = <&pp1800_lcdio>;
@@ -63,18 +71,18 @@
 		};
 
 		dpaux {
-			status = "okay"; //0x545c0000 disabled-in-stok / okey-in-abca / okey-in-5.2
+			status = "disabled"; //0x545c0000 disabled-in-stok / okay-in-abca / okey-in-5.2
 		};
 
 		vi {
-			status = "okay";
+			status = "disabled";
 		};
 
 		sor1 {
-			status = "disabled"; //0x54580000 okey-in-stok / okey-in-abca / disabled-in-5.2
-			nvidia,active-panel = <&sor1_dp_display>;
+			status = "disabled"; //0x54580000 okay-in-stok / okay-in-abca / disabled-in-5.2
+			nvidia,active-panel = <&sor1_hdmi_display>;
 			dp-display {
-				status = "okey";
+				status = "okay";
 				compatible = "dp, display";
 				nvidia,hpd-gpio = <&gpio TEGRA_GPIO(CC, 1) 1>; /* PN7 */
 				nvidia,is_ext_dp_panel = <1>;
@@ -116,12 +124,15 @@
 				};
 			};
 			hdmi-display {
-				status = "disabled";
+				status = "okay";
+				disp-default-out {
+					nvidia,out-flags = <TEGRA_DC_OUT_HOTPLUG_HIGH>;
+				};
 			};
 		};
 
 		dpaux1 {
-			status = "disabled"; // 0x54040000 okey-in-stok / okey-in-abca / disabled-in-5.2
+			status = "disabled"; // 0x54040000 okay-in-stok / okay-in-abca / disabled-in-5.2
 		};
 
 		i2c@546c0000 {
