@@ -75,7 +75,7 @@
 					nvidia,out-type = <TEGRA_DC_OUT_DSI>;
 					nvidia,out-width = <211>;
 					nvidia,out-height = <148>;
-					nvidia,out-flags = <TEGRA_DC_OUT_INITIALIZED_MODE>;
+					nvidia,out-flags = <TEGRA_DC_OUT_CONTINUOUS_MODE>;
 					nvidia,out-parent-clk = "pll_d_out0";
 					nvidia,out-xres = <2560>;
 					nvidia,out-yres = <1800>;
@@ -91,8 +91,8 @@
 						vfront-porch = <4>;
 						vback-porch = <4>;
 						vsync-len = <4>;
-						nvidia,h-ref-to-sync = <0>;
-						nvidia,v-ref-to-sync = <0>;
+						nvidia,h-ref-to-sync = <1>;
+						nvidia,v-ref-to-sync = <1>;
 					};
 				};
 				smartdimmer {
