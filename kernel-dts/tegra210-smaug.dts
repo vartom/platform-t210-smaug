@@ -18,7 +18,6 @@
 #include "tegra210-smaug-common-disp.dtsi"
 #include "smaug-platforms/tegra210-smaug-power-tree.dtsi"
 #include "smaug-platforms/tegra210-smaug-emc.dtsi"
-//#include "smaug-platforms/tegra210-smaug-sensor.dtsi"
 #include "smaug-platforms/tegra210-smaug-pinmux.dtsi"
 #include "smaug-platforms/tegra210-smaug-keys.dtsi"
 #include "smaug-platforms/tegra210-smaug-thermal-nct72.dtsi"
@@ -44,8 +43,8 @@
 	serial-number = "1234";
 
 	chosen {
-		bootargs = "cros_legacy init=/init rw console=ttyS0,115200n8 console=fb0 printk.synchronous=1 pstore.compress=lz4 vpr_resize fbcon=map:0 video=tegrafb no_console_suspend=1";
-		nvidia,bluetooth-mac = "11:22:33:44:55:66";
+		bootargs = "cros_legacy init=/init rw vmalloc=256M tegra_fbmem=0x800000@0x969ee000 vpr_resize fbcon debug console=ttyS0,115200n8 earlyprintk pstore.compress=lz4 lp0_vec=2672@0xf9aff000 tsec=32M@4064M video=tegrafb no_console_suspend=1 otf_key=914e3cd033c06c6370b630bb6ec9dd4e firmware_class.path=/lib/firmware";
+		nvidia,bluetooth-mac = "11:22:33:44:55:66"; 
 	};
 
 	firmware {
@@ -55,55 +54,20 @@
 		};
 	};
 
-/*	reserved-memory {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
-
-		/delete-node/ ramoops_carveout;
-
-		ramoops@f66cc000 {
-			compatible = "ramoops";
-			reg = <0 0xf66cc000 0 0x400000>;
-			record-size = <0x00090000>;
-			console-size = <0x00090000>;
-			pmsg-size = <0x00090000>;
-		};
-	};
-
-	reserved-memory {
-		#address-cells = <0x2>;
-		#size-cells = <0x2>;
-		ranges;
-
-		ramoops_carveout {
-			compatible = "nvidia,ramoops";
-			reg = <0x0 0xf66cc000 0x0 0x200000>;
-			no-map;
-		};
-	};*/
-
 	gpu {
 		status = "okay";
 	};
 
 	tlk {
 		status = "okay";
-	/*	clocks = <&tegra_car TEGRA210_CLK_NVDEC>;
-		clock-names = "nvdec";
-		resets = <&tegra_car TEGRA210_CLK_NVDEC>;
-		reset-names = "nvdec";
-		power-domains = <&nvdec_pd>;*/
 	};
 
 	cpu_edp {
 		status = "okay";
-		nvidia,edp_limit = <16000>;
 	};
 
 	gpu_edp {
 		status = "okay";
-		nvidia,edp_limit = <16000>;
 	};
 
 	cpus {
@@ -156,8 +120,8 @@
 		ec@1e {
 			compatible = "google,cros-ec-i2c";
 			reg = <0x1e>;
-			interrupt-parent = <&gpio>;
-			interrupts = <TEGRA_GPIO(Z, 1) IRQ_TYPE_LEVEL_LOW>;
+		//	interrupt-parent = <&gpio>;
+		//	interrupts = <TEGRA_GPIO(Z, 1) IRQ_TYPE_LEVEL_LOW>; //plug/unplug a USB device and see the extcon driver
 			wakeup-source;
 
 			ec_i2c_0: i2c-tunnel {
@@ -239,9 +203,5 @@
 	pwm@7000a000 {
 		status = "disabled";
 	};
-
-//	/delete-node/ psy_extcon_xudc;
-//	/delete-node/ usb_cd@7009f000;
-//	/delete-node/ ramoops_carveout;
 
 };
