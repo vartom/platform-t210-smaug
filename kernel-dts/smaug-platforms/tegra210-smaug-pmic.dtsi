@@ -132,8 +132,14 @@
 			watchdog {
 				maxim,wdt-boot-timeout = <16>;
 				maxim,wdt-clear-time = <13>;
-				status = "disabled";
-				dt-override-status-odm-data = <0x00020000 0x00020000>;
+				status = "okay"; // set ok for android
+			};
+
+			backup-battery {
+				// TODO: Verify
+				maxim,backup-battery-charging-current = <100>;
+				maxim,backup-battery-charging-voltage = <3000000>;
+				maxim,backup-battery-output-resistor = <100>;
 			};
 
 			fps {
@@ -232,7 +238,6 @@
 					regulator-name = "avdd-sys"; // AVDD_SYS_1V2
 					regulator-min-microvolt = <1200000>;
 					regulator-max-microvolt = <1200000>;
-					regulator-always-on;
 					regulator-boot-on;
 					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
 					maxim,active-fps-power-up-slot = <0>;
@@ -351,7 +356,6 @@
 					regulator-disable-ramp-delay = <1160>;
 					maxim,ramp-rate-setting = <100000>;
 					regulator-ramp-delay = <50000>;
-					regulator-always-on;
 					regulator-boot-on;
 				};
 			};
