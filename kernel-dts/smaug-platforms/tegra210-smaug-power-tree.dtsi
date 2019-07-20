@@ -134,7 +134,7 @@
 		dc@54240000 {
 			avdd_hdmi-supply = <&max77620_ldo8>;    /* 1V05 */
 			avdd_hdmi_pll-supply = <&max77620_sd3>; /* 1V8 */
-		//	vdd_hdmi_5v0-supply = <&vdd_hdmi>;	/* 5V0 GPIO_PCC7 fixed reg */
+			vdd_hdmi_5v0-supply = <&vdd_hdmi>;	/* 5V0 GPIO_PCC7 fixed reg */
 			/* dp */
 			vdd-dp-pwr-supply = <&pp3300>;
 			avdd-dp-pll-supply = <&max77620_sd3>;
@@ -143,8 +143,8 @@
 
 		dsi {
 			avdd-dsi-csi-supply = <&max77620_ldo0>;
-			power-supply = <&pplcd_vdd>;
-			ddi-supply = <&pp1800_lcdio>;
+		//	power-supply = <&pplcd_vdd>;
+		//	ddi-supply = <&pp1800_lcdio>;
 		};
 
 		vi {
@@ -152,7 +152,7 @@
 		};
 
 		i2c@546c0000 {
-			avdd_dsi_csi-supply = <&max77620_ldo0>;
+		//	avdd_dsi_csi-supply = <&max77620_ldo0>;
 		};
 	};
 
