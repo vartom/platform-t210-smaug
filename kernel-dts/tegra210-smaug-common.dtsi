@@ -19,7 +19,7 @@
 /memreserve/ 0x80000000 0x00020000;
 
 #include <t210-common-platforms/tegra210-common.dtsi>
-#include <t210-common-platforms/tegra210-cpufreq.dtsi>
+#include "smaug-platforms/tegra210-cpufreq.dtsi"
 #include <tegra210-soc/tegra210-sdhci.dtsi>
 #include <tegra210-soc/tegra210-audio.dtsi>
 #include "smaug-platforms/tegra210-abca-prods.dtsi"
