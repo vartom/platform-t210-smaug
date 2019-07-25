@@ -26,7 +26,7 @@
 	};
 
 	dfll-max77621@70110000 {
-		status = "disabled";
+		status = "okay";
 	};
 
 	pwm_regulators {
@@ -49,27 +49,13 @@
 		};
 	};
 
-	dvfs_rails {
-		vdd-cpu-rail-ovr@0 {
-			status = "disabled";
-		};
-
-		vdd-gpu-rail-ovr@1 {
-			status = "disabled";
-		};
-
-		vdd-cpu-rail-max77621@2 {
-			status = "okay";
-		};
-
-		vdd-gpu-rail-max77621@3 {
-			status = "okay";
-		};
-	};
-
 	cpuidle {
 		vdd-cpu-supply = <&cpu_max77621_reg>;
 		cc4-microvolt = <606250>;
+	};
+
+	clock@70110000 {
+		vdd-cpu-supply = <&cpu_max77621_reg>;
 	};
 
 	dummy_cool_dev: dummy-cool-dev {
@@ -101,13 +87,6 @@
 				};
 			};
 		};
-	};
-
-	i2c@7000c400 {
-	/*	bh1730fvc@29 {
-			vid-supply = <&max77620_ldo6>;
-			vdd-supply = <&pp3300>;
-		};*/
 	};
 
 	i2c@546c0000 {
@@ -203,7 +182,7 @@
 	};
 
 	xotg {
-		usb_vbus-supply = <&usbc_vbus>;
+		usb_vbus-supply = <&ppvar_sys>;
 	};
 
 	xusb_padctl@7009f000 {
@@ -223,7 +202,31 @@
 			usb2-0 {
 				vbus-supply = <&usbc_vbus>;
 			};
+			usb2-3 {
+				vbus-supply = <&usbc_vbus>;
+			};
+
 		};
+	};
+
+	pcie-controller@1003000 {
+		l0-dvddio-pex-supply = <&max77620_ldo1>;
+		l1-dvddio-pex-supply = <&max77620_ldo1>;
+		l2-dvddio-pex-supply = <&max77620_ldo1>;
+		l3-dvddio-pex-supply = <&max77620_ldo1>;
+		l4-dvddio-pex-supply = <&max77620_ldo1>;
+		l5-dvddio-pex-supply = <&max77620_ldo1>;
+		l6-dvddio-pex-supply = <&max77620_ldo1>;
+		l0-hvddio-pex-supply = <&max77620_sd3>;
+		l1-hvddio-pex-supply = <&max77620_sd3>;
+		l2-hvddio-pex-supply = <&max77620_sd3>;
+		l3-hvddio-pex-supply = <&max77620_sd3>;
+		l4-hvddio-pex-supply = <&max77620_sd3>;
+		l5-hvddio-pex-supply = <&max77620_sd3>;
+		l6-hvddio-pex-supply = <&max77620_sd3>;
+		dvdd-pex-pll-supply = <&max77620_ldo1>;
+		hvdd-pex-pll-e-supply = <&max77620_sd3>;
+		vddio-pex-ctl-supply = <&max77620_sd3>;
 	};
 
 	sdhci@700b0600 {

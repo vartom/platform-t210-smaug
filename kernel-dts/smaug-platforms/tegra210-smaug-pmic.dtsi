@@ -49,7 +49,7 @@
 			maxim,enable-etr;
 			maxim,dvs-default-state = <1>;
 			maxim,enable-gpio = <&max77620 5 0>;
-		//	junction-warn-millicelsius = <120>;
+			junction-warn-millicelsius = <120>;
 		};
 
 		gpu_max77621_reg: max77621@1c {
@@ -69,10 +69,10 @@
 			#thermal-sensor-cells = <0>;
 			maxim,enable-active-discharge;
 			maxim,enable-bias-control;
-			maxim,enable-etr;
+			maxim,disable-etr;
 			maxim,dvs-default-state = <1>;
 			maxim,enable-gpio = <&max77620 6 0>;
-		//	junction-warn-millicelsius = <120>;
+			junction-warn-millicelsius = <120>;
 		};
 
 		max77620: max77620@3c {
@@ -132,7 +132,7 @@
 			watchdog {
 				maxim,wdt-boot-timeout = <16>;
 				maxim,wdt-clear-time = <13>;
-				status = "okay"; // set ok for android
+				status = "disabled";
 			};
 
 			backup-battery {

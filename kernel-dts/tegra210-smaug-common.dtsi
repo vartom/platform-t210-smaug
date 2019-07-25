@@ -20,6 +20,7 @@
 
 #include <t210-common-platforms/tegra210-common.dtsi>
 #include "smaug-platforms/tegra210-cpufreq.dtsi"
+#include <t210-common-platforms/tegra210-e2141-max8973-dfll.dtsi>
 #include <tegra210-soc/tegra210-sdhci.dtsi>
 #include <tegra210-soc/tegra210-audio.dtsi>
 #include "smaug-platforms/tegra210-abca-prods.dtsi"
@@ -221,23 +222,6 @@
 
 	pcie-controller@1003000 {
 		nvidia,wake-gpio = <&gpio TEGRA_GPIO(A, 2) 0>;
-		dvdd-pex-pll-supply = <&max77620_ldo1>;
-		l0-dvddio-pex-supply = <&max77620_ldo1>;
-		l1-dvddio-pex-supply = <&max77620_ldo1>;
-		l2-dvddio-pex-supply = <&max77620_ldo1>;
-		l3-dvddio-pex-supply = <&max77620_ldo1>;
-		l4-dvddio-pex-supply = <&max77620_ldo1>;
-		l5-dvddio-pex-supply = <&max77620_ldo1>;
-		l6-dvddio-pex-supply = <&max77620_ldo1>;
-		hvdd-pex-pll-e-supply = <&max77620_sd3>;
-		l0-hvddio-pex-supply = <&max77620_sd3>;
-		l1-hvddio-pex-supply = <&max77620_sd3>;
-		l2-hvddio-pex-supply = <&max77620_sd3>;
-		l3-hvddio-pex-supply = <&max77620_sd3>;
-		l4-hvddio-pex-supply = <&max77620_sd3>;
-		l5-hvddio-pex-supply = <&max77620_sd3>;
-		l6-hvddio-pex-supply = <&max77620_sd3>;
-		vddio-pex-ctl-supply = <&max77620_sd3>;
 		status = "okay";
 
 		pci@1,0 {
@@ -414,79 +398,6 @@
 
 	gpu-dvfs-rework {
 		status = "okay";
-	};
-
-	thermal_fan_est_shared_data: tfesd {
-		secret = <37>;
-		toffset = <0>;
-		polling_period = <1100>;
-		ndevs = <1>;
-		cdev_type = "pwm-fan";
-		tzp_governor_name = "pid_thermal_gov";
-
-		pwms = <&tegra_pwm 1 40000>;
-		dev1 {
-			dev_data = "Tboard_tegra";
-			coeffs = <100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
-		};
-	};
-
-	thermal-fan-est {
-		compatible = "thermal-fan-est";
-		name = "thermal-fan-est";
-
-		num_resources = <0>;
-		shared_data = <&thermal_fan_est_shared_data>;
-		trip_length = <10>;
-		active_trip_temps = <0 30000 35000 37000 40000
-				43000 45000 50000 54000 60000>;
-		active_hysteresis = <0 0 0 0 0
-				0 0 0 0 0>;
-		pwms = <&tegra_pwm 1 40000>;
-	};
-
-	pwm_fan_shared_data: pfsd {
-		active_steps = <10>;
-		active_rpm = <0 1000 2000 3000 4000 5000 6000 7000 10000 11000>;
-		active_rru = <40 2 1 1 1 1 1 1 1 1>;
-		active_rrd = <40 2 1 1 1 1 1 1 1 1>;
-		state_cap_lookup = <2 2 2 7 7 7 7 7 9 9>;
-
-		step_time = <100>; /* mesecs */
-		pwm_period = <40000>;
-		pwm_id = <1>;
-		state_cap = <9>;
-		active_pwm_max = <256>;
-		tach_gpio =  <&gpio TEGRA_GPIO(S, 7) GPIO_ACTIVE_LOW>; /* TEGRA_GPIO_PS7 */
-		pwm_gpio = <&gpio TEGRA_GPIO(V, 4) GPIO_ACTIVE_LOW>; /* TEGRA_GPIO_PV4 */
-		tach_period = <1000>;
-		pwms = <&tegra_pwm 1 40000>;
-	};
-
-	pwm-fan {
-		compatible = "pwm-fan";
-		name = "pwm-fan";
-		status = "disabled";
-		pwms = <&tegra_pwm 1 40000>;
-		shared_data = <&pwm_fan_shared_data>;
-		
-		profiles {
-			status = "okay";
-			default = "tight";
-
-			tight {
-				status = "okay";
-				name = "tight";
-				state_cap = <9>;
-				active_pwm = <0 65 75 85 105 125 150 175 200 225>;
-			};
-			stock {
-				status = "okay";
-				name = "stock";
-				state_cap = <9>;
-				active_pwm = <0 25 35 45 75 105 125 150 200 225>;
-			};
-		};
 	};
 
 	ptm {
@@ -830,9 +741,12 @@
 		};
 	};
 
+	watchdog@60005100 {
+		status = "okay"; // set ok for android
+	};
+
 	clock@70110000 {
 		status = "okay";
-		vdd-cpu-supply = <&cpu_max77621_reg>;
 		nvidia,align-step-uv = <6250>;
 		nvidia,sample-rate = <12500>;
 		nvidia,droop-ctrl = <0x00000f00>;
@@ -860,83 +774,7 @@
 		status = "okay";
 	};
 
-	dfll_cap: dfll-cdev-cap {
-		compatible = "nvidia,tegra-dfll-cdev-action";
-		act-dev = <&tegra_clk_dfll>;
-		cdev-type = "DFLL-cap";
-		#cooling-cells = <2>; /* min followed by max */
-	};
-
-	dfll_floor: dfll-cdev-floor {
-		compatible = "nvidia,tegra-dfll-cdev-action";
-		act-dev = <&tegra_clk_dfll>;
-		cdev-type = "DFLL-floor";
-		#cooling-cells = <2>; /* min followed by max */
-	};
-
 	thermal-zones {
-		CPU-therm {
-			trips {
-				dfll_floor_trip0: dfll-floor-trip0 {
-					temperature = <TEGRA210_DFLL_THERMAL_FLOOR_0>; /* millicelsius */
-					hysteresis = <1000>; /* millicelsius */
-					type = "active";
-				};
-				dfll_floor_trip1: dfll-floor-trip1 {
-					temperature = <TEGRA210_DFLL_THERMAL_FLOOR_1>; /* millicelsius */
-					hysteresis = <1000>; /* millicelsius */
-					type = "active";
-				};
-				dfll_floor_trip2: dfll-floor-trip2 {
-					temperature = <TEGRA210_DFLL_THERMAL_FLOOR_2>; /* millicelsius */
-					hysteresis = <1000>; /* millicelsius */
-					type = "active";
-				};
-				dfll_floor_trip3: dfll-floor-trip3 {
-					temperature = <TEGRA210_DFLL_THERMAL_FLOOR_3>; /* millicelsius */
-					hysteresis = <1000>; /* millicelsius */
-					type = "active";
-				};
-				dfll_cap_trip0: dfll-cap-trip0 {
-					temperature = <TEGRA210_DFLL_THERMAL_CAP_0>; /* millicelsius */
-					hysteresis = <1000>; /* millicelsius */
-					type = "active";
-				};
-				dfll_cap_trip1: dfll-cap-trip1 {
-					temperature = <TEGRA210_DFLL_THERMAL_CAP_1>; /* millicelsius */
-					hysteresis = <1000>; /* millicelsius */
-					type = "active";
-				};
-			};
-
-			cooling-maps {
-				dfll_map0 {
-					trip = <&dfll_floor_trip0>;
-					cooling-device = <&dfll_floor 1 1>;
-				};
-				dfll_map1 {
-					trip = <&dfll_floor_trip1>;
-					cooling-device = <&dfll_floor 2 2>;
-				};
-				dfll_map2 {
-					trip = <&dfll_floor_trip2>;
-					cooling-device = <&dfll_floor 3 3>;
-				};
-				dfll_map3 {
-					trip = <&dfll_floor_trip3>;
-					cooling-device = <&dfll_floor 4 4>;
-				};
-				dfll_map5 {
-					trip = <&dfll_cap_trip0>;
-					cooling-device = <&dfll_cap 1 1>;
-				};
-				dfll_map6 {
-					trip = <&dfll_cap_trip1>;
-					cooling-device = <&dfll_cap 2 2>;
-				};
-			};
-		};
-
 
  		cpu_max77621_reg {
 			polling-delay-passive = <0>; /* milliseconds */

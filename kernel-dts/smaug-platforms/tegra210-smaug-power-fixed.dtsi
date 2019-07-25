@@ -28,7 +28,7 @@
 		ppvar_sys: regulator@0 {
 			compatible = "regulator-fixed";
 			reg = <0>;
-			regulator-name = "PPVAR_SYS";
+			regulator-name = "ppvar-sys";
 			regulator-min-microvolt = <4400000>;
 			regulator-max-microvolt = <4400000>;
 			regulator-always-on;
@@ -38,41 +38,38 @@
 		pplcd_vdd: regulator@1 {
 			compatible = "regulator-fixed-sync";
 			reg = <1>;
-			regulator-name = "PPLCD_VDD";
+			regulator-name = "pplcd-vdd";
 			regulator-min-microvolt = <4400000>;
 			regulator-max-microvolt = <4400000>;
 			gpio = <&gpio TEGRA_GPIO(V, 4) 0>;
 			enable-active-high;
 			regulator-boot-on;
-			vin-supply = <&ppvar_sys>;
 		};
 
 		pp3000_always: regulator@2 {
 			compatible = "regulator-fixed-sync";
 			reg = <2>;
-			regulator-name = "PP3000_ALWAYS";
+			regulator-name = "pp3000-always";
 			regulator-min-microvolt = <3000000>;
 			regulator-max-microvolt = <3000000>;
 			regulator-always-on;
-			vin-supply = <&ppvar_sys>;
 		};
 
 		pp3300: regulator@3 {
 			compatible = "regulator-fixed-sync";
 			reg = <3>;
-			regulator-name = "PP3300";
+			regulator-name = "pp3300";
 			regulator-min-microvolt = <3300000>;
 			regulator-max-microvolt = <3300000>;
 			regulator-boot-on;
 			regulator-always-on;
 			enable-active-high;
-			vin-supply = <&ppvar_sys>;
 		};
 
 		pp5000: regulator@4 {
 			compatible = "regulator-fixed-sync";
 			reg = <4>;
-			regulator-name = "PP5000";
+			regulator-name = "pp5000";
 			regulator-min-microvolt = <5000000>;
 			regulator-max-microvolt = <5000000>;
 			regulator-always-on;
@@ -82,7 +79,7 @@
 		pp1800_lcdio: regulator@5 {
 			compatible = "regulator-fixed-sync";
 			reg = <5>;
-			regulator-name = "PP1800_LCDIO";
+			regulator-name = "pp1800-lcdio";
 			regulator-min-microvolt = <1800000>;
 			regulator-max-microvolt = <1800000>;
 			gpio = <&gpio TEGRA_GPIO(V, 3) 0>;
@@ -93,7 +90,7 @@
 		pp1800_cam: regulator@6 {
 			compatible = "regulator-fixed-sync";
 			reg= <6>;
-			regulator-name = "PP1800_CAM";
+			regulator-name = "pp1800-cam";
 			regulator-min-microvolt = <1800000>;
 			regulator-max-microvolt = <1800000>;
 			gpio = <&gpio TEGRA_GPIO(K, 3) 0>;
@@ -103,10 +100,9 @@
 		usbc_vbus: regulator@7 {
 			compatible = "regulator-fixed-sync";
 			reg = <7>;
-			regulator-name = "USBC_VBUS";
+			regulator-name = "usbc-vbus";
 			regulator-min-microvolt = <5000000>;
 			regulator-max-microvolt = <5000000>;
-			vin-supply = <&ppvar_sys>;
 		};
 
 		vdd_hdmi: regulator@8 {
@@ -116,17 +112,5 @@
 			regulator-min-microvolt = <5000000>;
 			regulator-max-microvolt = <5000000>;
 		};
-
-/*		vdd_dsi_csi: regulator@8 {
-			compatible = "regulator-fixed-sync";
-			reg = <8>;
-			regulator-name = "AVDD_DSI_CSI_1V2";
-			regulator-min-microvolt = <1200000>;
-			regulator-max-microvolt = <1200000>;
-			regulator-always-on;
-			regulator-boot-on;
-			vin-supply = <&max77620_ldo0>;
-		};
-*/
 	};
 };
