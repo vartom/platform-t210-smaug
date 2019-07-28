@@ -24,7 +24,7 @@
 #include <tegra210-soc/tegra210-sdhci.dtsi>
 #include <tegra210-soc/tegra210-audio.dtsi>
 #include "smaug-platforms/tegra210-abca-prods.dtsi"
-#include <tegra210-soc/tegra210-thermal-Tboard-Tdiode.dtsi>
+#include "smaug-platforms/tegra210-thermal-Tboard-Tdiode.dtsi"
 #include <dt-bindings/clock/tegra210-car.h>
 #include <dt-bindings/reset/tegra210-car.h>
 #include <dt-bindings/soc/tegra-pmc.h>
