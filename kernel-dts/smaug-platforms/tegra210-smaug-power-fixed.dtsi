@@ -103,6 +103,7 @@
 			regulator-name = "usbc-vbus";
 			regulator-min-microvolt = <5000000>;
 			regulator-max-microvolt = <5000000>;
+			regulator-always-on;
 		};
 
 		vdd_hdmi: regulator@8 {

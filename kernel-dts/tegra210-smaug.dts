@@ -21,7 +21,6 @@
 #include "smaug-platforms/tegra210-smaug-pinmux.dtsi"
 #include "smaug-platforms/tegra210-smaug-keys.dtsi"
 #include "smaug-platforms/tegra210-smaug-thermal-nct72.dtsi"
-#include "smaug-platforms/tegra210-darcy-extcon-p2894-0000-a00.dtsi"
 
 / {
 
@@ -44,7 +43,8 @@
 
 	chosen {
 		bootargs = "cros_legacy init=/init rw vmalloc=256M tegra_fbmem=0x800000@0x969ee000 vpr_resize fbcon debug console=ttyS0,115200n8 earlyprintk pstore.compress=lz4 lp0_vec=2672@0xf9aff000 tsec=32M@4064M video=tegrafb no_console_suspend=1 otf_key=914e3cd033c06c6370b630bb6ec9dd4e firmware_class.path=/lib/firmware";
-		nvidia,bluetooth-mac = "11:22:33:44:55:66"; 
+		nvidia,bluetooth-mac = "11:22:33:44:55:66";
+		nvidia,wifi-mac = "00:90:4c:11:22:33";
 	};
 
 	firmware {
@@ -120,8 +120,8 @@
 		ec@1e {
 			compatible = "google,cros-ec-i2c";
 			reg = <0x1e>;
-		//	interrupt-parent = <&gpio>;
-		//	interrupts = <TEGRA_GPIO(Z, 1) IRQ_TYPE_LEVEL_LOW>; //plug/unplug a USB device and see the extcon driver
+			interrupt-parent = <&gpio>;
+			interrupts = <TEGRA_GPIO(Z, 1) IRQ_TYPE_LEVEL_LOW>;
 			wakeup-source;
 
 			ec_i2c_0: i2c-tunnel {
@@ -141,6 +141,8 @@
 			usbc_extcon: extcon {
 				compatible = "google,extcon-usbc-cros-ec";
 				google,usb-port-id = <0>;
+
+				#extcon-cells = <0>;
 			};
 		};
 	};

@@ -202,10 +202,6 @@
 			usb2-0 {
 				vbus-supply = <&usbc_vbus>;
 			};
-			usb2-3 {
-				vbus-supply = <&usbc_vbus>;
-			};
-
 		};
 	};
 
@@ -250,7 +246,7 @@
 	};
 
 	bluedroid_pm {
-	//	avdd-supply = <&battery_reg>;
-	//	dvdd-supply = <&max77620_sd3>;
+		avdd-supply = <&ppvar_sys>;
+		dvdd-supply = <&max77620_sd3>;
 	};
 };

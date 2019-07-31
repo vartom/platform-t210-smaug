@@ -122,7 +122,6 @@
 		/delete-property/ mmc-hs400-1_8v;
 		built-in;
 		only-1-8-v;
-	//	power-off-rail;
 		status = "okay";
 		bus-width = <8>;
 		non-removable;
@@ -135,12 +134,16 @@
 		status = "disabled";
 	};
 
-	sdhci@700b0200 { /* SDMMC2 for WiFi */
-		only-1-8-v;
+	sdhci1: sdhci@700b0200 { /* SDMMC2 for WiFi */
+		power-gpios = <&gpio TEGRA_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
+		no-1-8-v;
 		non-removable;
+		keep-power-in-suspend;
+		non-removable;
+		bus-width = <4>;
 		/delete-property/ mmc-hs400-enhanced-strobe;
 		/delete-property/ mmc-hs400-1_8v;
-		status = "disabled";
+		status = "okay";
 	};
 
 	sdhci@700b0000 { /* SDMMC1 Not Used */
@@ -258,16 +261,18 @@
 
 	serial@70006040 {
 		compatible = "nvidia,tegra20-uart";
-		status = "okay";
+		status = "disabled";
 	};
 
 	serial@70006000 {
-		compatible = "nvidia,tegra20-uart";
+		compatible = "nvidia,tegra210-uart", "nvidia,tegra114-hsuart", "nvidia,tegra20-uart";
+		/delete-property/ console-port;
 		status = "disabled";
 	};
 
 	serial@70006300 {
-		dma-names = "tx";
+		compatible = "nvidia,tegra210-uart", "nvidia,tegra114-hsuart", "nvidia,tegra20-uart";
+	//	dma-names = "tx";
 		status = "okay";
 	/*	bluetooth {
 			compatible = "brcm,bcm43438-bt";
@@ -303,6 +308,7 @@
 					usb2-0 {
 						status = "okay";
 						nvidia,function = "xusb";
+						nvidia,hs_curr_level_offset = <(-4)>;
 					};
 				};
 			};
@@ -360,8 +366,9 @@
 		phys = <&{/xusb_padctl@7009f000/pads/usb2/lanes/usb2-0}>,
 				<&{/xusb_padctl@7009f000/pads/pcie/lanes/pcie-6}>;
 		phy-names = "usb2-0", "usb3-0";
-		#extcon-cells = <1>;
-	//	extcon-cables = <&usbc_extcon>;
+		#extcon-cells = <0>;
+		extcon-cables = <&usbc_extcon>;
+		extcon-cable-names = "id";
 		nvidia,pmc-wakeup =
 			<&tegra_pmc
 				PMC_WAKE_TYPE_EVENT 39 PMC_TRIGGER_TYPE_HIGH>,
@@ -375,8 +382,9 @@
 				<&{/xusb_padctl@7009f000/pads/pcie/lanes/pcie-6}>;
 		phy-names = "usb2", "usb3";
 		charger-detector = <&tegra_usb_cd>;
-	//	extcon-cables = <&usbc_extcon>;
-		#extcon-cells = <1>;
+		extcon-cables = <&usbc_extcon>;
+		extcon-cable-names = "vbus";
+		#extcon-cells = <0>;
 		status = "okay";
 	};
 
@@ -388,12 +396,13 @@
 	};
 
 	psy_extcon_xudc {
+		status = "disabled";
 		/delete-property/ dt-override-status-odm-data;
 	};
 
 	xotg {
-		#extcon-cells = <1>;
-		status = "okay";
+		#extcon-cells = <0>;
+		status = "disabled";
 	};
 
 	gpu-dvfs-rework {
