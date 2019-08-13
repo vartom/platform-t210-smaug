@@ -30,6 +30,7 @@
 #include <dt-bindings/soc/tegra-pmc.h>
 #include <dt-bindings/thermal/tegra124-soctherm.h>
 #include <dt-bindings/thermal/tegra210-trips.h>
+#include "smaug-platforms/tegra210-smaug-comms.dtsi"
 
 / {
 
@@ -135,12 +136,13 @@
 	};
 
 	sdhci1: sdhci@700b0200 { /* SDMMC2 for WiFi */
-		power-gpios = <&gpio TEGRA_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
-		no-1-8-v;
+	//	no-1-8-v;
 		non-removable;
 		keep-power-in-suspend;
-		non-removable;
 		bus-width = <4>;
+		only-1-8-v;
+		force-non-removable-rescan;
+		uhs-mask = <0x8>;
 		/delete-property/ mmc-hs400-enhanced-strobe;
 		/delete-property/ mmc-hs400-1_8v;
 		status = "okay";
