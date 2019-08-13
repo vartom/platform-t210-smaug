@@ -27,8 +27,8 @@
 				nvidia,dsi-instance = <DSI_INSTANCE_0>;
 				nvidia,dsi-n-data-lanes = <8>;
 				nvidia,dsi-pixel-format = <TEGRA_DSI_PIXEL_FORMAT_24BIT_P>;
-				nvidia,dsi-refresh-rate = <61>;
-				nvidia,dsi-rated-refresh-rate = <60>;
+				nvidia,dsi-refresh-rate = <60>;
+			//	nvidia,dsi-rated-refresh-rate = <60>;
 				nvidia,dsi-te-polarity-low = <TEGRA_DSI_ENABLE>;
 				nvidia,dsi-video-data-type = <TEGRA_DSI_VIDEO_TYPE_COMMAND_MODE>;
 				nvidia,dsi-video-clock-mode = <TEGRA_DSI_VIDEO_CLOCK_CONTINUOUS>;
@@ -36,7 +36,7 @@
 				nvidia,dsi-ganged-swap-links = <TEGRA_DSI_ENABLE>;
 				nvidia,dsi-ganged-write-to-all-links = <TEGRA_DSI_ENABLE>;
 				nvidia,dsi-controller-vs = <DSI_VS_1>;
-				nvidia,enable-hs-clk-in-lp-mode = <TEGRA_DSI_ENABLE>;
+			//	nvidia,enable-hs-clk-in-lp-mode = <TEGRA_DSI_ENABLE>;
 				nvidia,dsi-virtual-channel = <TEGRA_DSI_VIRTUAL_CHANNEL_0>;
 				nvidia,dsi-panel-reset = <TEGRA_DSI_ENABLE>;
 				nvidia,dsi-power-saving-suspend = <TEGRA_DSI_DISABLE>;
