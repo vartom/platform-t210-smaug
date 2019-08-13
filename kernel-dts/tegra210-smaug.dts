@@ -42,7 +42,7 @@
 	serial-number = "1234";
 
 	chosen {
-		bootargs = "cros_legacy init=/init rw vmalloc=256M tegra_fbmem=0x800000@0x969ee000 vpr_resize fbcon debug console=ttyS0,115200n8 earlyprintk pstore.compress=lz4 lp0_vec=2672@0xf9aff000 tsec=32M@4064M video=tegrafb no_console_suspend=1 otf_key=914e3cd033c06c6370b630bb6ec9dd4e firmware_class.path=/lib/firmware";
+		bootargs = "cros_legacy root=/dev/mmcblk0p7 rootfstype=ext4 rw rootwait vmalloc=256M tegra_fbmem=0x800000@0x969ee000 vpr_resize fbcon debug console=ttyS0,115200n8 earlyprintk pstore.compress=lz4 lp0_vec=2672@0xf9aff000 tsec=32M@4064M video=tegrafb no_console_suspend=1 otf_key=914e3cd033c06c6370b630bb6ec9dd4e androidboot.selinux=permissive firmware_class.path=/lib/firmware";
 		nvidia,bluetooth-mac = "11:22:33:44:55:66";
 		nvidia,wifi-mac = "00:90:4c:11:22:33";
 	};
