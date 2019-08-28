@@ -194,14 +194,6 @@
 		};
 	};
 
-	sound {
-		status = "disabled";
-	};
-
-	sound_ref {
-		status = "disabled";
-	};
-
 	pwm@7000a000 {
 		status = "disabled";
 	};
