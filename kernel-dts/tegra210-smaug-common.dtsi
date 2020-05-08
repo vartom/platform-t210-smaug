@@ -501,15 +501,18 @@
 		nvidia,num-codec-link = <3>;
 
 		nvidia,audio-routing =
-			"x Headphone Jack", "y HPOL",
-			"x Headphone Jack", "y HPOR",
-			"x Mic Jack", "y MICBIAS",
-			"x Mic Jack", "y MIC",
+		//	"x Headphone Jack", "y HPOL",
+		//	"x Headphone Jack", "y HPOR",
+			"y Headphone", "y HPOL",
+			"y Headphone", "y HPOR",
+			"x Mic Jack", "x MICBIAS1",
+//			"x Mic Jack", "y MIC",
+			"y Mic", "y MIC",
 			"x DMIC L1", "x Int Mic",
 			"x DMIC R1", "x Int Mic",
 			"x DMIC L2", "x Int Mic",
 			"x DMIC R2", "x Int Mic",
-			"x Int Spk", "z Speaker";
+			"z OUT", "z Speaker";
 
 		nvidia,xbar = <&tegra_axbar>;
 
@@ -533,12 +536,24 @@
 			name-prefix = "x";
 		};
 
-
 		nvidia,dai-link-2 {
-			link-name = "nau8825";
+			link-name = "max98357a";
 			cpu-dai = <&tegra_i2s2>;
-			codec-dai = <&headset>;
+			codec-dai = <&speaker>;
 			cpu-dai-name = "I2S2";
+			codec-dai-name = "max98357a-hifi";
+			format = "i2s";
+			bit-format = "s16_le";
+			srate = <48000>;
+			num-channel = <2>;
+			name-prefix = "z";
+		};
+
+		nvidia,dai-link-3 {
+			link-name = "nau8825";
+			cpu-dai = <&tegra_i2s3>;
+			codec-dai = <&headset>;
+			cpu-dai-name = "I2S3";
 			codec-dai-name = "nau8825-hifi";
 			format = "i2s";
 			bit-format = "s16_le";
@@ -546,19 +561,6 @@
 			num-channel = <2>;
 			ignore_suspend;
 			name-prefix = "y";
-		};
-
-		nvidia,dai-link-3 {
-			link-name = "max98357a";
-			cpu-dai = <&tegra_i2s3>;
-			codec-dai = <&speaker>;
-			cpu-dai-name = "I2S3";
-			codec-dai-name = "HiFi";
-			format = "i2s";
-			bit-format = "s16_le";
-			srate = <48000>;
-			num-channel = <2>;
-			name-prefix = "z";
 		};
 	};
 
