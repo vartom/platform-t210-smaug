@@ -277,7 +277,6 @@
 	};
 
 	serial@70006040 {
-		compatible = "nvidia,tegra20-uart";
 		status = "disabled";
 	};
 
@@ -288,16 +287,8 @@
 	};
 
 	serial@70006300 {
-		compatible = "nvidia,tegra210-uart", "nvidia,tegra114-hsuart", "nvidia,tegra20-uart";
 	//	dma-names = "tx";
 		status = "okay";
-	/*	bluetooth {
-			compatible = "brcm,bcm43438-bt";
-			shutdown-gpios = <&gpio TEGRA_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
-			// level correct?
-			device-wakeup-gpios = <&gpio TEGRA_GPIO(H, 3) GPIO_ACTIVE_LOW>;
-			max-speed = <3000000>;
-		};*/
 	};
 
 	serial@70006200 {
