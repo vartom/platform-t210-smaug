@@ -60,7 +60,7 @@
 	};
 
 	chosen {
-		bootargs = "cros_legacy init=/init root=/dev/mmcblk0p4 rootfstype=ext4 rw rootwait skip_initramfs vmalloc=256M tegra_fbmem=0x800000@0x969ee000 vpr_resize fbcon debug console=ttyS0,115200n8 earlyprintk pstore.compress=lz4 lp0_vec=2672@0xf9aff000 tsec=32M@4064M video=tegrafb no_console_suspend=1 otf_key=914e3cd033c06c6370b630bb6ec9dd4e androidboot.selinux=permissive firmware_class.path=/vendor/firmware";
+		bootargs = "cros_legacy init=/init root=/dev/mmcblk0p4 rootfstype=ext4 rw rootwait skip_initramfs vmalloc=256M tegra_fbmem=0x800000@0x969ee000 nvdec_enabled=0 vpr_resize console=ttyS0,115200n8 earlycon=uart8250,mmio32,0x70006000 lp0_vec=2672@0xf9aff000 tsec=32M@4064M video=tegrafb no_console_suspend=1 otf_key=914e3cd033c06c6370b630bb6ec9dd4e androidboot.selinux=permissive firmware_class.path=/vendor/firmware";
 		nvidia,bluetooth-mac = "11:22:33:44:55:66";
 		nvidia,wifi-mac = "00:90:4c:11:22:33";
 	};
