@@ -169,7 +169,7 @@
 				regulator-supplies = "vdd-1v8-audio-hv", "vdd-1v8-audio-hv-bias";
 				vdd-1v8-audio-hv-supply = <&max77620_sd3>;
 				vdd-1v8-audio-hv-bias-supply = <&max77620_sd3>;
-				fsync-width = <0>;
+			//	fsync-width = <0>;
 			};
 	
 			i2s@702d1100 {
@@ -179,7 +179,7 @@
 				regulator-supplies = "vdd-1v8-spi-hv", "vdd-1v8-spi-hv-bias";
 				vdd-1v8-spi-hv-supply = <&max77620_sd3>;
 				vdd-1v8-spi-hv-bias-supply = <&max77620_sd3>;
-				fsync-width = <0>;
+			//	fsync-width = <0>;
 			};
 
 			i2s@702d1200 {
@@ -189,14 +189,14 @@
 				regulator-supplies = "vdd-1v8-spi-hv", "vdd-1v8-spi-hv-bias";
 				vdd-1v8-spi-hv-supply = <&max77620_sd3>;
 				vdd-1v8-spi-hv-bias-supply = <&max77620_sd3>;
-				fsync-width = <0>;
+			//	fsync-width = <0>;
 			};
 
 			i2s@702d1300 {
-				fsync-width = <0>;
+			//	fsync-width = <0>;
 			};
 			i2s@702d1400 {
-				fsync-width = <0>;
+			//	fsync-width = <0>;
 			};
 		};
 
@@ -447,6 +447,8 @@
 			interrupts = <TEGRA_GPIO(E, 6) IRQ_TYPE_LEVEL_LOW>;
 	
 			nuvoton,jkdet-enable;
+			nuvoton,jkdet-pull-enable;
+			nuvoton,jkdet-pull-up;
 			nuvoton,jkdet-polarity = <GPIO_ACTIVE_LOW>;
 	
 			nuvoton,vref-impedance = <2>;
@@ -464,6 +466,9 @@
 
 			clock-names = "mclk";
 			clocks = <&tegra_car TEGRA210_CLK_CLK_OUT_2>;
+
+			assigned-clocks = <&tegra_car TEGRA210_CLK_CLK_OUT_2>;
+			assigned-clock-rates = <19200000>;
 		};
 
 	};
@@ -481,38 +486,39 @@
 		nvidia,spkr-en-gpios = <&rt5677 4 GPIO_ACTIVE_HIGH>;
 		nvidia,dmic-clk-en-gpios = <&rt5677 2 GPIO_ACTIVE_HIGH>;
 
-		clocks = <&tegra_car TEGRA210_CLK_PLL_P_OUT1>,
-			<&tegra_car TEGRA210_CLK_PLL_A>,
+		clocks = <&tegra_car TEGRA210_CLK_PLL_A>,
 			<&tegra_car TEGRA210_CLK_PLL_A_OUT0>,
 			<&tegra_car TEGRA210_CLK_D_AUDIO>,
-			<&tegra_car TEGRA210_CLK_CLK_M>,
-			<&tegra_car TEGRA210_CLK_EXTERN1>;
-		clock-names = "pll_p_out1", "pll_a", "pll_a_out0", "ahub",
-			"clk_m", "extern1";
-
+			<&tegra_car TEGRA210_CLK_EXTERN1>,
+			<&tegra_car TEGRA210_CLK_CLK_OUT_1>,
+			<&tegra_car TEGRA210_CLK_EXTERN2>,
+			<&tegra_car TEGRA210_CLK_CLK_OUT_2>;
+		clock-names = "pll_a", "pll_a_out0", "ahub",
+			"extern1", "clk_out_1", "extern2", "clk_out_2";
 
 		assigned-clocks = <&tegra_car TEGRA210_CLK_PLL_A>,
 			<&tegra_car TEGRA210_CLK_PLL_A_OUT0>,
 			<&tegra_car TEGRA210_CLK_D_AUDIO>,
-			<&tegra_car TEGRA210_CLK_EXTERN1>;
+			<&tegra_car TEGRA210_CLK_EXTERN1>,
+			<&tegra_car TEGRA210_CLK_EXTERN2>,
+			<&tegra_car TEGRA210_CLK_CLK_OUT_1>,
+			<&tegra_car TEGRA210_CLK_CLK_OUT_2>;
 		assigned-clock-rates = <368640000>, <36864000>,
-			<36864000>, <12288000>;
+			<36864000>, <24576000>, <24576000>, <24576000>, <19200000>;
 
-		nvidia,num-codec-link = <3>;
+		nvidia,num-codec-link = <1>;
+		mclk-fs = <256>;
 
 		nvidia,audio-routing =
-		//	"x Headphone Jack", "y HPOL",
-		//	"x Headphone Jack", "y HPOR",
-			"y Headphone", "y HPOL",
-			"y Headphone", "y HPOR",
-			"x Mic Jack", "x MICBIAS1",
-//			"x Mic Jack", "y MIC",
-			"y Mic", "y MIC",
-			"x DMIC L1", "x Int Mic",
-			"x DMIC R1", "x Int Mic",
-			"x DMIC L2", "x Int Mic",
-			"x DMIC R2", "x Int Mic",
-			"z OUT", "z Speaker";
+			"Headphone Jack", "HPOL",
+			"Headphone Jack", "HPOR",
+			"MICBIAS",  "Mic Jack",
+			"MIC", "Mic Jack",
+			"DMIC L1", "Int Mic",
+			"DMIC R1", "Int Mic",
+			"DMIC L2", "Int Mic",
+			"DMIC R2", "Int Mic",
+			"Int Spk", "Speaker";
 
 		nvidia,xbar = <&tegra_axbar>;
 
@@ -522,45 +528,19 @@
 			codec-dai = <&rt5677>;
 			cpu-dai-name = "I2S1";
 			codec-dai-name = "rt5677-aif1";
-			tx-mask = <0xFF>;
-			rx-mask = <0xFF>;
-			format = "dsp_a";
-		//	bitclock-slave;
-		//	frame-slave;
-		//	bitclock-noninversion;
+		//	tx-mask = <0xFF>;
+		//	rx-mask = <0xFF>;
+			format = "i2s";
+			bitclock-slave;
+			frame-slave;
+			frame-noninversion;
+			bitclock-noninversion;
 		//	frame-inversion;
 			bit-format = "s16_le";
 			bclk_ratio = <0>;
 			srate = <48000>;
-			num-channel = <4>;
-			name-prefix = "x";
-		};
-
-		nvidia,dai-link-2 {
-			link-name = "max98357a";
-			cpu-dai = <&tegra_i2s2>;
-			codec-dai = <&speaker>;
-			cpu-dai-name = "I2S2";
-			codec-dai-name = "max98357a-hifi";
-			format = "i2s";
-			bit-format = "s16_le";
-			srate = <48000>;
 			num-channel = <2>;
-			name-prefix = "z";
-		};
-
-		nvidia,dai-link-3 {
-			link-name = "nau8825";
-			cpu-dai = <&tegra_i2s3>;
-			codec-dai = <&headset>;
-			cpu-dai-name = "I2S3";
-			codec-dai-name = "nau8825-hifi";
-			format = "i2s";
-			bit-format = "s16_le";
-			srate = <48000>;
-			num-channel = <2>;
-			ignore_suspend;
-			name-prefix = "y";
+		//	name-prefix = "x";
 		};
 	};
 
