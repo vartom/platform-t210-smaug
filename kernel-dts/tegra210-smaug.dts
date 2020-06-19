@@ -93,6 +93,10 @@
 		};
 	};
 
+	psci {
+		nvidia,system-lp0-disable;
+	};
+
 	spi@7000d400 {
 		status = "okay";
 /*		spi@0 {
